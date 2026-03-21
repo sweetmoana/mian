@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레벨별 시계 공부</title>
     <style>
-        body { font-family: 'Nanum Gothic', sans-serif; text-align: center; background-color: #fff9eb; margin: 0; padding: 20px; }
+        /*body { font-family: 'Nanum Gothic', sans-serif; text-align: center; background-color: #fff9eb; margin: 0; padding: 20px; }
         .container { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: inline-block; border: 5px solid #ffcc00; }
         .level-buttons { margin-bottom: 20px; }
         .level-buttons button { padding: 8px 15px; margin: 5px; cursor: pointer; border: 2px solid #ffcc00; background: white; border-radius: 20px; font-weight: bold; }
@@ -15,7 +15,83 @@
         input { width: 70px; height: 50px; font-size: 28px; text-align: center; border: 3px solid #ffcc00; border-radius: 15px; outline: none; }
         .main-btn { padding: 15px 40px; font-size: 22px; cursor: pointer; background-color: #ff9800; color: white; border: none; border-radius: 15px; box-shadow: 0 4px 0 #e68a00; }
         .main-btn:active { transform: translateY(4px); box-shadow: none; }
-        #message { margin-top: 25px; font-size: 22px; font-weight: bold; min-height: 35px; }
+        #message { margin-top: 25px; font-size: 22px; font-weight: bold; min-height: 35px; }*/
+/* 1. 모바일 전체 화면 최적화 */
+    body { 
+        font-family: 'Nanum Gothic', sans-serif; 
+        text-align: center; 
+        background-color: #fff9eb; 
+        margin: 0; 
+        padding: 10px; /* 여백 최소화 */
+        overflow: hidden; /* 스크롤 방지 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh; /* 화면 높이에 딱 맞춤 */
+    }
+       .level-buttons { 
+        display: flex;             /* 요소들을 가로로 나열 */
+        justify-content: center;   /* 가운데 정렬 */
+        gap: 5px;                  /* 버튼 사이의 간격 최소화 */
+        margin-bottom: 15px;
+        flex-wrap: nowrap;         /* 절대 줄바꿈 되지 않도록 설정 */
+    }
+
+    .level-buttons button { 
+        flex: 1;                   /* 세 버튼이 동일한 비율로 공간 나눠 갖기 */
+        padding: 8px 2px;          /* 좌우 여백을 줄여서 글자가 잘리지 않게 함 */
+        font-size: 13px;           /* 모바일 화면에 맞춰 글자 크기 살짝 축소 */
+        cursor: pointer; 
+        border: 2px solid #ffcc00; 
+        background: white; 
+        border-radius: 15px; 
+        font-weight: bold;
+        white-space: nowrap;       /* 버튼 안의 글자도 줄바꿈 방지 */
+        max-width: 110px;          /* 너무 커지는 것 방지 */
+    }
+
+    .level-buttons button.active { 
+        background: #ffcc00; 
+        color: white; 
+    }
+    .container { 
+        background: white; 
+        padding: 15px; 
+        border-radius: 25px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        display: inline-block; 
+        border: 4px solid #ffcc00;
+        width: 90%; /* 가로 폭 맞춤 */
+        max-width: 400px;
+        margin: auto;
+    }
+
+    h2 { font-size: 1.2rem; margin: 10px 0; color: #ff9800; }
+
+    /* 2. 시계 크기 자동 조절 */
+    canvas { 
+        background-color: #fff; 
+        border-radius: 50%; 
+        width: 100%; /* 부모 너비에 맞춤 */
+        max-width: 280px; /* 너무 커지지 않게 */
+        height: auto;
+    }
+
+    .input-group { margin: 15px 0; font-size: 22px; }
+    input { 
+        width: 60px; height: 45px; 
+        font-size: 22px; text-align: center; 
+        border: 2px solid #ffcc00; border-radius: 12px; 
+    }
+
+    .main-btn { 
+        padding: 12px 30px; font-size: 18px; 
+        background-color: #ff9800; color: white; 
+        border: none; border-radius: 12px; 
+        width: 100%; /* 버튼을 크게 만들어 터치하기 편하게 */
+    }
+
+    #message { margin-top: 15px; font-size: 18px; min-height: 40px; line-height: 1.4; }
     </style>
 </head>
 <body>
