@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레벨별 시계 공부</title>
+    <style>
+        body { font-family: 'Nanum Gothic', sans-serif; text-align: center; background-color: #fff9eb; margin: 0; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: inline-block; border: 5px solid #ffcc00; }
+        .level-buttons { margin-bottom: 20px; }
+        .level-buttons button { padding: 8px 15px; margin: 5px; cursor: pointer; border: 2px solid #ffcc00; background: white; border-radius: 20px; font-weight: bold; }
+        .level-buttons button.active { background: #ffcc00; color: white; }
+        canvas { background-color: #fff; border-radius: 50%; margin: 10px 0; }
+        .input-group { margin: 20px 0; font-size: 28px; font-weight: bold; }
+        input { width: 70px; height: 50px; font-size: 28px; text-align: center; border: 3px solid #ffcc00; border-radius: 15px; outline: none; }
+        .main-btn { padding: 15px 40px; font-size: 22px; cursor: pointer; background-color: #ff9800; color: white; border: none; border-radius: 15px; box-shadow: 0 4px 0 #e68a00; }
+        .main-btn:active { transform: translateY(4px); box-shadow: none; }
+        #message { margin-top: 25px; font-size: 22px; font-weight: bold; min-height: 35px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: #ff9800;">🌟 난이도를 골라보세요! 🌟</h2>
+    
+    <div class="level-buttons" id="levelContainer">
+        <button onclick="changeLevel(1, this)" class="active">1단계: 정각/30분</button>
+        <button onclick="changeLevel(2, this)">2단계: 5분 단위</button>
+        <button onclick="changeLevel(3, this)">3단계: 1분 단위</button>
+    </div>
+
+    <canvas id="clockCanvas" width="320" height="320"></canvas>
+
+    <div class="input-group">
+        <input type="number" id="userHour" placeholder="0"> 시 
+        <input type="number" id="userMin" placeholder="0"> 분
+    </div>
+
+    <button class="main-btn" onclick="checkAnswer()">정답 확인!</button>
+    <p id="message"></p>
+</div>
+
+<script>
+    const canvas = document.getElementById('clockCanvas');
+    const ctx = canvas.getContext('2d');
+    const radius = canvas.width / 2;
+    let targetHour, targetMin;
+    let currentLevel = 1;
+
+    function changeLevel(level, btn) {
+        currentLevel = level;
+        const buttons = document.querySelectorAll('.level-buttons button');
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        generateQuestion();
+    }
+   
+    function drawClock(hour, min) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(radius, radius);
+        
+        // 1. 시계 배경
+        ctx.beginPath();
+        ctx.arc(0, 0, radius - 12, 0, 2 * Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = '#ffcc00';
+        ctx.lineWidth = 8;
+        ctx.stroke();
+
+        // 2. ★ 분 눈금 그리기 (추가된 부분) ★
+        for (let i = 0; i < 60; i++) {
+            let angle = (i * 6) * (Math.PI / 180); // 1분은 6도
+            ctx.rotate(angle);
+            ctx.beginPath();
+            
+            if (i % 5 === 0) {
+                // 5분 단위 눈금 (굵고 길게)
+                ctx.lineWidth = 3;
+                ctx.moveTo(0, -radius + 15);
+                ctx.lineTo(0, -radius + 30);
+            } else {
+                // 1분 단위 눈금 (얇고 짧게)
+                ctx.lineWidth = 1;
+                ctx.moveTo(0, -radius + 15);
+                ctx.lineTo(0, -radius + 22);
+            }
+            
+            ctx.strokeStyle = "#bbb"; // 눈금 색상 (너무 진하지 않게)
+            ctx.stroke();
+            ctx.rotate(-angle);
+        }
+
+        // 3. 숫자 그리기 (아까 정하신 대로 약간 아래로 offset)
+        ctx.font = "bold 22px 'Nanum Gothic'";
+        ctx.fillStyle = "#333";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const offsetDown =0; 
+
+        for (let num = 1; num <= 12; num++) {
+            let ang = (num * 30 - 90) * (Math.PI / 180);
+            let x = Math.cos(ang) * (radius - 42);
+            let y = Math.sin(ang) * (radius - 42);
+            ctx.fillText(num.toString(), x, y + offsetDown);
+        }
+     
+        // 3. 분침 (파랑 - 길고 조금 얇게)
+        drawHand((min * Math.PI / 30), radius * 0.7, 7, "#2196F3");
+        
+        // 4. 시침 (검정 - 짧고 굵게)
+        drawHand((hour * Math.PI / 6) + (min * Math.PI / 360), radius * 0.45, 10, "#333");
+
+        // 6. 중심점
+        ctx.beginPath();
+        ctx.arc(0, 0, 8, 0, 2 * Math.PI);
+        ctx.fillStyle = '#333';
+        ctx.fill();
+        
+        ctx.restore();
+    }
+
+    function drawHand(pos, length, width, color) {
+        ctx.beginPath();
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = color;
+        ctx.moveTo(0, 0);
+        ctx.rotate(pos);
+        ctx.lineTo(0, -length);
+        ctx.stroke();
+        ctx.rotate(-pos);
+    }
+
+    function generateQuestion() {
+        document.getElementById('message').innerText = "";
+        document.getElementById('userHour').value = "";
+        document.getElementById('userMin').value = "";
+        
+        targetHour = Math.floor(Math.random() * 12) + 1;
+        
+        if (currentLevel === 1) {
+            targetMin = Math.random() < 0.5 ? 0 : 30; // 0분 아니면 30분
+        } else if (currentLevel === 2) {
+            targetMin = Math.floor(Math.random() * 12) * 5; // 5분 단위
+        } else {
+            targetMin = Math.floor(Math.random() * 60); // 1분 단위
+        }
+        
+        drawClock(targetHour, targetMin);
+
+        //document.getElementById('userHour').focus();
+    }
+
+   function checkAnswer() {
+        const h = parseInt(document.getElementById('userHour').value);
+        const m = parseInt(document.getElementById('userMin').value) || 0;
+        const messageElement = document.getElementById('message');
+
+        if (h === targetHour && m === targetMin) {
+            // 정답일 때
+            messageElement.style.color = "#4caf50";
+            
+            // 2초 카운트다운 시작
+            let secondsLeft = 2;
+            messageElement.innerHTML = `🎊 정답이야! 대단해! 🎊<br><span style="font-size: 16px; color: #888;">${secondsLeft}초 뒤에 다음 문제...</span>`;
+            
+            const timer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    messageElement.innerHTML = `🎊 정답이야! 대단해! 🎊<br><span style="font-size: 16px; color: #888;">${secondsLeft}초 뒤에 다음 문제...</span>`;
+                } else {
+                    clearInterval(timer);
+                    generateQuestion();
+                }
+            }, 1000);
+
+        } else {
+            // 오답일 때
+            messageElement.innerText = "다시 한번 세어볼까? 할 수 있어! 💪";
+            messageElement.style.color = "#f44336";
+        }
+    }
+
+    generateQuestion();
+    
+    // 엔터 키 이벤트 추가
+    // 'userHour'나 'userMin' 입력창에서 엔터를 누르면 checkAnswer()를 실행합니다.
+    [document.getElementById('userHour'), document.getElementById('userMin')].forEach(input => {
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    });
+
+    // 마이너스(-) 입력 방지 및 글자수 제한
+    const inputs = [document.getElementById('userHour'), document.getElementById('userMin')];
+    
+    inputs.forEach(input => {
+        // 1. 키보드에서 '-' 키를 누르는 것 차단
+        input.addEventListener('keydown', function(e) {
+            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+            }
+        });
+
+        // 2. 혹시나 붙여넣기 등으로 들어온 음수나 잘못된 값 처리
+        input.addEventListener('input', function() {
+            if (this.value < 0) this.value = 0;
+            
+            // 시(Hour)는 최대 12, 분(Min)은 최대 59까지만 입력되도록 제한 (선택 사항)
+            if (this.id === 'userHour' && this.value > 12) this.value = 12;
+            if (this.id === 'userMin' && this.value > 59) this.value = 59;
+        });
+    });
+</script>
+
+</body>
+</html>
