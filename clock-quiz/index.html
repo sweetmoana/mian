@@ -17,16 +17,21 @@
         .main-btn:active { transform: translateY(4px); box-shadow: none; }
         #message { margin-top: 25px; font-size: 22px; font-weight: bold; min-height: 35px; }*/
 /* 1. 모바일 전체 화면 최적화 */
-    body { 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+     body { 
         font-family: 'Nanum Gothic', sans-serif; 
         text-align: center; 
         background-color: #fff9eb; 
         margin: 0; 
         padding: 10px; /* 여백 최소화 */
-        overflow: hidden; /* 스크롤 방지 */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        overflow-y: auto;   /* 내용이 넘치면 세로 스크롤 생성 */
+        -webkit-overflow-scrolling: touch; /* 아이폰에서 부드러운 스크롤 */
+        display: block;
         height: 100vh; /* 화면 높이에 딱 맞춤 */
     }
        .level-buttons { 
@@ -69,12 +74,13 @@
     h2 { font-size: 1.2rem; margin: 10px 0; color: #ff9800; }
 
     /* 2. 시계 크기 자동 조절 */
-    canvas { 
-        background-color: #fff; 
-        border-radius: 50%; 
-        width: 100%; /* 부모 너비에 맞춤 */
-        max-width: 280px; /* 너무 커지지 않게 */
+    
+
+canvas { 
+        width: 65vw;
+        max-width: 260px;
         height: auto;
+        margin: 10px auto;
     }
 
     .input-group { margin: 15px 0; font-size: 22px; }
@@ -257,7 +263,7 @@
             messageElement.innerText = "다시 한번 세어볼까? 할 수 있어! 💪";
             messageElement.style.color = "#f44336";
         }
-      // document.activeElement.blur(); // 현재 활성화된 입력창(키보드) 닫기
+        document.activeElement.blur(); // 현재 활성화된 입력창(키보드) 닫기
     }
 
     generateQuestion();
