@@ -1,0 +1,172 @@
+/* 공통 스타일 정리 */
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background-color: #f8f9fa; 
+    margin: 0; 
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header { text-align: center; margin-bottom: 15px; }
+h1 { font-size: 1.6rem; color: #2c3e50; margin: 0 0 5px 0;}
+.info { color: #868e96; font-size: 0.95rem; }
+
+.quiz-wrapper { 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+}
+/* 10문제 혼합형 전용: 한 줄로 넓게 나오게 하기 */
+/* HTML의 body에 mix-가 들어간 클래스가 있을 때만 작동합니다 */
+.mix-easy-page .quiz-wrapper, 
+.mix-hard-page .quiz-wrapper { 
+    grid-template-columns: 1fr; /* 2단이 아니라 1단으로! */
+    max-width: 500px;           /* 너무 퍼지지 않게 적당한 너비로 제한 */
+}
+
+@media (max-width: 768px) {
+    .quiz-wrapper { grid-template-columns: 1fr; }
+}
+
+.card { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 16px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-top: 6px solid #3498db;
+}
+
+/* 4. 카드 내부 제목(연습장 A, B) 상단 간격 제거 */
+.card h3 {
+    margin-top: 5px;         /* 카드 천장과 제목 사이 간격 축소 */
+    margin-bottom: 10px;     /* 제목과 첫 문제 사이 간격 축소 */
+    font-size: 1rem;
+}
+
+ul { list-style: none; padding: 0; margin: 0; }
+
+li { 
+    font-size: 1.4rem; 
+    padding: 0;                /* 패딩을 제거하고 height로 조절 */
+    height: 56px;              /* 한 줄의 높이를 완전히 고정 */
+    border-bottom: 1px solid #f1f3f5; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    overflow: hidden;          /* 내용물이 삐져나와도 간격 유지 */
+}
+
+/* 문제와 번호를 감싸는 컨테이너 */
+.q-container { 
+    display: flex; 
+    align-items: center;      /* 핵심: 수직 방향(상하)으로 중앙 정렬 */
+    justify-content: flex-start; 
+    line-height: 1;           /* 줄 간격 때문에 밀리는 현상 방지 */
+}
+
+/* 번호 스타일 */
+.q-num { 
+    color: #adb5bd; 
+    font-size: 0.85rem;       /* 숫자를 조금 더 작게 하셨다면 유지 */
+    width: 45px;              /* 번호 영역 폭 (괄호 포함 넉넉히) */
+    font-weight: normal;
+    display: inline-block;
+    text-align: left;
+    /* 추가: 작은 글자가 위로 뜨거나 아래로 처지지 않게 보정 */
+    margin-top: 2px;          
+}
+
+/* 문제 텍스트 스타일 */
+.q-text { 
+    font-weight: bold; 
+    color: #212529; 
+    font-size: 1.4rem;        /* 문제 숫자는 큼직하게 */
+    display: flex;
+    align-items: center;
+}
+
+.ans-box { 
+    min-width: 80px; 
+    height: 36px; 
+    line-height: 32px;        /* 테두리 두께(2px+2px)만큼 뺀 높이로 설정 */
+    text-align: center;
+    background-color: #f1f3f5; 
+    color: transparent; 
+    border-radius: 10px; 
+    font-size: 1.4rem; 
+    font-weight: bold; 
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* 핵심: 처음부터 테두리를 그려서 자리를 잡아둡니다 */
+    border: 2px dashed #dee2e6; 
+    box-sizing: border-box;    /* 테두리가 박스 안쪽으로 계산되게 설정 */
+    transition: background-color 0.2s;
+}
+
+.ans-box.show { 
+    background-color: #ffffff; 
+    color: inherit;            /* 부모(각 페이지 테마색) 색상을 따라감 */
+    border: 2px solid currentColor; /* 점선을 실선으로만 바꿈 (두께는 동일) */
+    cursor: default; 
+}
+/* 클릭해서 정답이 보일 때 */
+.ans-box.reveal {
+    background-color: white !important;
+    border-color: #ff4d4f !important;
+    color: #e03131 !important; /* 빨간색 정답 */
+}
+
+.btn-container { 
+    margin-top: 30px; width: 100%; max-width: 450px; 
+    display: flex; flex-direction: column; gap: 12px;
+}
+
+button, .btn-refresh { 
+    width: 100%; padding: 18px; border: none; border-radius: 15px; 
+    background-color: #2c3e50; color: white; font-size: 1.1rem; 
+    font-weight: bold; cursor: pointer;
+}
+
+.btn-home { 
+    display: block; text-align: center; text-decoration: none;
+    padding: 15px; border: 2px solid #cbd5e1; border-radius: 15px; 
+    background-color: white; color: #64748b; font-size: 1rem; font-weight: bold;
+}
+
+/* --- 난이도별 테마 색상 정의 --- */
+
+/* 1. 왕기초 (병아리 노란색) - 🐣 */
+body.basic-page { background-color: #fff9db; }
+.basic-page .card { border-top-color: #fab005; border-top-width: 8px; }
+.basic-page button { background-color: #f08c00; box-shadow: 0 4px 0 #b46800; }
+.basic-page .ans-box.show { color: #f08c00; background-color: #fff4e6; border: 1px solid #ffe8cc; }
+
+/* 2. 기초 (새싹 초록색) - 🌱 */
+body.easy-page { background-color: #ebfbee; }
+.easy-page .card { border-top-color: #40c057; border-top-width: 8px; }
+.easy-page button { background-color: #2f9e44; box-shadow: 0 4px 0 #206a2e; }
+.easy-page .ans-box.show { color: #2f9e44; background-color: #f1fbf0; border: 1px solid #d3f9d8; }
+
+/* 3. 고난도 (불꽃 빨간색/오렌지) - 🔥 */
+body.hard-page { background-color: #fff5f5; }
+.hard-page .card { border-top-color: #fa5252; border-top-width: 8px; }
+.hard-page button { background-color: #e03131; box-shadow: 0 4px 0 #962020; }
+.hard-page .ans-box.show { color: #e03131; background-color: #fff5f5; border: 1px solid #ffc9c9; }
+
+/* 4. 기초 혼합 (시원한 하늘색) - ⚡ */
+body.mix-easy-page { background-color: #e7f5ff; }
+.mix-easy-page .card { border-top-color: #339af0; border-top-width: 8px; }
+.mix-easy-page button { background-color: #1c7ed6; box-shadow: 0 4px 0 #12558f; }
+.mix-easy-page .ans-box.show { color: #1c7ed6; background-color: #f0f8ff; border: 1px solid #d0ebff; }
+
+/* 5. 고난도 혼합 (신비로운 보라색) - 🔮 */
+body.mix-hard-page { background-color: #f3f0ff; }
+.mix-hard-page .card { border-top-color: #7950f2; border-top-width: 8px; }
+.mix-hard-page button { background-color: #6741d9; box-shadow: 0 4px 0 #452b91; }
+.mix-hard-page .ans-box.show { color: #6741d9; background-color: #f8f7ff; border: 1px solid #e5dbff; }
