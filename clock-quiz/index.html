@@ -332,21 +332,21 @@ function playBeep(isCorrect) {
             osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
         });
     } else {
-        // 오답: 띠용~ (음을 더 확실하게 들리도록 보정)
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        // 시작 주파수를 조금 더 높여서 대비를 줌
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
-        
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime); // 오답 소리 크기 살짝 키움
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.5);
+        // 정답: 뾰로롱~ (도-미-솔 순차적으로 빠르게 재생)
+        const notes = [783.99, 783.99, 783.99]; // 도, 미, 솔
+        notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.1 + 0.2);
+            
+            osc.start(audioCtx.currentTime + i * 0.1);
+            osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+        });
     }
 }
 
