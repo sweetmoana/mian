@@ -317,7 +317,7 @@ function playBeep(isCorrect) {
     
     if (isCorrect) {
         // 정답: 뾰로롱~ (도-미-솔 순차적으로 빠르게 재생)
-        const notes = [523.25, 659.25, 783.99]; // 도, 미, 솔
+        const notes = [523.25, 659.25, 783.99]; // 솔,솔, 솔
         notes.forEach((freq, i) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
