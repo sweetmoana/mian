@@ -332,20 +332,21 @@ function playBeep(isCorrect) {
             osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
         });
     } else {
-        // 오답: 띠용~ (음이 위에서 아래로 미끄러짐)
+        // 오답: 띠용~ (음을 더 확실하게 들리도록 보정)
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         
-        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.4);
+        // 시작 주파수를 조금 더 높여서 대비를 줌
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
         
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime); // 오답 소리 크기 살짝 키움
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
         
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.4);
+        osc.stop(audioCtx.currentTime + 0.5);
     }
 }
 
