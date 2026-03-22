@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+<meta name="theme-color" content="#f08c00">
+ <title>구구단 랜덤 10문제</title>
+ <link rel="stylesheet" href="style.css">
+   
+</head>
+<body class="mix-hard-page">
+
+ <div class="header">
+        <h1>🏋️‍♀️ 구구단 고난도 혼합 (10문제)</h1>
+        <p class="info">2~9단 전체 범위입니다.<br>회색 칸을 누르면 정답이 보여요!</p>
+    </div>
+
+    <div class="quiz-wrapper">
+        <div class="card">
+            <ul id="quiz-list"></ul>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn-refresh" onclick="allNewQuizzes()">🔄 새로운 문제 만들기</button>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+
+
+<script>
+    // 문제 생성 함수
+    function allNewQuizzes() {
+        const listContainer = document.getElementById('quiz-list');
+        if (!listContainer) return; // 컨테이너가 없으면 중단
+        
+        listContainer.innerHTML = ""; // 기존 문제 싹 지우기
+
+        for (let i = 0; i < 10; i++) {
+            const dan = Math.floor(Math.random() * 8) + 2; // 2~9단
+            const num = Math.floor(Math.random() * 9) + 1; // 1~9
+            const answer = dan * num;
+
+            // 새로운 문제 아이템(li) 생성
+            const li = document.createElement('li');
+            li.className = 'quiz-item';
+            li.innerHTML = `
+                <span class="q-text">
+                    <span class="q-num">(${i + 1})</span> ${dan} × ${num} = 
+                </span>  
+                <div class="ans-box" onclick="revealAnswer(this, ${answer})">?</div>
+            `;
+            listContainer.appendChild(li);
+        }
+        window.scrollTo(0, 0); // 화면 맨 위로 올리기
+    }
+
+    // 클릭했을 때 정답을 보여주는 함수
+    function revealAnswer(element, ans) {
+        element.innerText = ans; // 숫자 넣기
+        element.classList.add('reveal'); // 정답 스타일(빨간색) 적용
+    }
+
+    // 페이지가 처음 열릴 때 자동으로 문제 생성
+    window.onload = function() {
+        allNewQuizzes();
+    };
+</script>
+</body>
+</html>

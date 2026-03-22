@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+<meta name="theme-color" content="#f08c00">
+    <title>왕기초 덧셈 퀴즈</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body class="basic-page">
+
+    <div class="header">
+        <h1>🐣 왕기초: 10 넘는 덧셈</h1>
+        <p class="info">문제를 풀고 <b>회색 칸</b>을 눌러보세요!</p>
+    </div>
+
+    <div class="quiz-wrapper">
+        <div class="card">
+            <h3>연습문제 (A)</h3>
+            <ul id="list-1"></ul>
+        </div>
+        <div class="card">
+            <h3>연습문제 (B)</h3>
+            <ul id="list-2"></ul>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button onclick="allNewQuizzes()">🔄 새로운 문제 만들기</button>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+
+<script>
+    function showAnswer(element) {
+        element.classList.add('show');
+    }
+
+    function getBasicPlusQuizzes(count) {
+        const data = [];
+        while (data.length < count) {
+            const n1 = Math.floor(Math.random() * 9) + 1;
+            const n2 = Math.floor(Math.random() * 9) + 1;
+            if (n1 + n2 >= 10) {
+                const q = n1 + " + " + n2;
+                if (!data.some(i => i.q === q)) data.push({ q, a: n1 + n2 });
+            }
+        }
+        return data;
+    }
+
+    function allNewQuizzes() {
+        const q1 = getBasicPlusQuizzes(10);
+        const q2 = getBasicPlusQuizzes(10);
+
+        // 번호와 문제를 확실히 분리하여 렌더링
+        document.getElementById('list-1').innerHTML = q1.map((item, idx) => `
+            <li>
+                <span class="q-text"><span class="q-num">(${idx + 1})</span> 
+            ${item.q} =</span> 
+                <div class="ans-box" onclick="showAnswer(this)">${item.a}</div>
+            </li>
+        `).join('');
+
+        document.getElementById('list-2').innerHTML = q2.map((item, idx) => `
+            <li>
+                <span class="q-text"><span class="q-num">(${idx + 1})</span> 
+            ${item.q} =</span> 
+                <div class="ans-box" onclick="showAnswer(this)">${item.a}</div>
+            </li>
+        `).join('');
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    allNewQuizzes();
+</script>
+
+</body>
+</html>

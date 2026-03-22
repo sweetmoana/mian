@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <meta name="theme-color" content="#4dabf7">
+    <title>오늘의 공부 마스터</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #f1f3f5; 
+            margin: 0; 
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { width: 100%; max-width: 500px; text-align: center; }
+        
+        /* 헤더 디자인 */
+        h1 { color: #212529; font-size: 2.2rem; margin-bottom: 10px; }
+        .subtitle { color: #868e96; margin-bottom: 40px; font-size: 1.1rem; }
+
+        .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+        /* 공통 아이템 스타일 */
+        .main-item {
+            display: flex;
+            align-items: center;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            text-decoration: none;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-item:active { transform: scale(0.97); }
+
+        /* 아이콘 영역 */
+        .icon-box {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 텍스트 영역 */
+        .text-box { text-align: left; }
+        .title { font-size: 1.4rem; font-weight: bold; color: #212529; display: block; }
+        .desc { font-size: 0.95rem; color: #495057; margin-top: 4px; }
+
+        /* 카테고리별 포인트 컬러 */
+        .math { border-left: 10px solid #ff922b; }  /* 연산: 주황 */
+        .clock { border-left: 10px solid #40c057; } /* 시계: 초록 */
+        .gugu { border-left: 10px solid #339af0; }  /* 구구단: 파랑 */
+
+        footer { margin-top: 60px; color: #adb5bd; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🏠 학습 놀이터</h1>
+        <p class="subtitle">오늘은 무엇을 연습해볼까요?</p>
+
+        <div class="main-grid">
+            <a href="math-quiz/index.html" class="main-item math">
+                <div class="icon-box">🔢</div>
+                <div class="text-box">
+                    <span class="title">더하기와 빼기</span>
+                    <span class="desc">왕기초부터 고난도 혼합까지!</span>
+                </div>
+            </a>
+
+            <a href="clock-quiz/index.html" class="main-item clock">
+                <div class="icon-box">🕒</div>
+                <div class="text-box">
+                    <span class="title">시계 보기</span>
+                    <span class="desc">몇 시 몇 분인지 맞춰보아요.</span>
+                </div>
+            </a>
+
+            <a href="gugudan-quiz/index.html" class="main-item gugu">
+                <div class="icon-box">✨</div>
+                <div class="text-box">
+                    <span class="title">구구단 마스터</span>
+                    <span class="desc">원리 탐색부터 랜덤 10문제까지!</span>
+                </div>
+            </a>
+        </div>
+
+        <footer>© 2026 엄마표 창의 연습장</footer>
+    </div>
+
+</body>
+</html>

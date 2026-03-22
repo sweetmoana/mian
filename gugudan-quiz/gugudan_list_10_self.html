@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>구구단 실력 완성!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="mix-hard-page">
+
+    <div class="header">
+        <h1>🏋️‍♀️ 구구단 실력 완성 (10문제)</h1>
+        <p class="info">2~9단 전체 범위입니다! 답을 쓰고 <b>[정답 확인하기]</b>를 눌러요.</p>
+    </div>
+
+    <div id="scoreBoard" class="score-board">
+        <div class="score-text" id="scoreValue">결과: 0점 / 100점</div>
+        <p id="scoreMsg" style="margin-top: 5px; color: #666;"></p>
+    </div>
+
+    <div class="quiz-wrapper">
+        <div class="card">
+            <ul id="quiz-list"></ul>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn-check" id="checkBtn" onclick="gradeQuiz()">✅ 정답 확인하기</button>
+        <button onclick="resetAndNew()">🔄 새로운 문제 만들기</button>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+
+<script>
+    function renderQuizzes() {
+        const quizList = document.getElementById('quiz-list');
+        quizList.innerHTML = ""; 
+
+        for (let i = 0; i < 10; i++) {
+            const dan = Math.floor(Math.random() * 8) + 2; // 2~9단
+            const num = Math.floor(Math.random() * 9) + 1; // 1~9
+            const answer = dan * num;
+
+            const li = document.createElement('li');
+            li.className = 'quiz-item';
+            li.innerHTML = `
+                <span class="q-text">
+                    <span class="q-num">(${i + 1})</span> ${dan} × ${num} = 
+                </span>  
+                <input type="number" class="ans-input" data-ans="${answer}" inputmode="numeric" min="0">
+                <span class="result-mark"></span>
+            `;
+            quizList.appendChild(li);
+        }
+        applyInputControl();
+    }
+
+    function applyInputControl() {
+        const inputs = document.querySelectorAll('.ans-input');
+        inputs.forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (['-', '.', 'e', 'E'].includes(e.key)) e.preventDefault();
+                
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const allInputs = Array.from(document.querySelectorAll('.ans-input'));
+                    const nextIdx = allInputs.indexOf(input) + 1;
+                    if (allInputs[nextIdx]) allInputs[nextIdx].focus();
+                    else gradeQuiz();
+                }
+            });
+            input.addEventListener('input', function() {
+                if (this.value < 0) this.value = "";
+            });
+        });
+    }
+
+    function gradeQuiz() {
+        const inputs = document.querySelectorAll('.ans-input');
+        const marks = document.querySelectorAll('.result-mark');
+        let score = 0;
+
+        inputs.forEach((input, i) => {
+            const userVal = parseInt(input.value);
+            const correctVal = parseInt(input.dataset.ans);
+            
+            if (userVal === correctVal) {
+                score += 10;
+                marks[i].innerText = "⭕";
+                marks[i].className = "result-mark correct-text";
+                input.classList.remove('wrong-input');
+            } else {
+                marks[i].innerText = "❌";
+                marks[i].className = "result-mark wrong-text";
+                input.classList.add('wrong-input');
+            }
+        });
+
+        const board = document.getElementById('scoreBoard');
+        board.style.display = "block";
+        document.getElementById('scoreValue').innerText = `결과: ${score}점 / 100점`;
+        
+        const msg = document.getElementById('scoreMsg');
+        if (score === 100) msg.innerText = "✨ 대단해요! 구구단을 완벽하게 마스터했군요! ✨";
+        else if (score >= 70) msg.innerText = "👍 아주 잘해요! 틀린 단수만 조금 더 연습해볼까요?";
+        else msg.innerText = "💪 포기하지 마세요! 매일 조금씩 하면 실력이 쑥쑥 늘 거예요.";
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAndNew() {
+        document.getElementById('scoreBoard').style.display = "none";
+        renderQuizzes();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 처음 실행
+    window.onload = renderQuizzes;
+</script>
+</body>
+</html>

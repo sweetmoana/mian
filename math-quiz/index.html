@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <meta name="theme-color" content="#f08c00">
+    <title>매일매일 수학 퀴즈</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #f8f9fa; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .container { width: 100%; max-width: 500px; text-align: center; }
+        h1 { color: #2c3e50; font-size: 1.8rem; margin-bottom: 20px; }
+
+        /* 탭 스타일 */
+        .tab-container {
+            display: flex;
+            background: #e9ecef;
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            color: #495057;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #2c3e50;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 메뉴 그리드 */
+        .menu-grid { display: none; grid-template-columns: 1fr; gap: 15px; animation: fadeIn 0.3s; }
+        .menu-grid.active { display: grid; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-item {
+            text-decoration: none; padding: 20px; background: white;
+            border-radius: 20px; display: flex; flex-direction: column;
+            align-items: flex-start; border-left: 8px solid #dee2e6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.2s;
+        }
+        .menu-item:active { transform: scale(0.98); }
+
+        /* 난이도별 색상 (기존 유지) */
+        .basic { border-left-color: #fab005; }
+        .easy { border-left-color: #40c057; }
+        .hard { border-left-color: #fa5252; }
+        .mix-easy { border-left-color: #339af0; }
+        .mix-hard { border-left-color: #7950f2; }
+
+        .title { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .desc { font-size: 0.85rem; color: #888; }
+	.self { background-color: #f8edeb}
+        footer { margin-top: 50px; color: #bdc3c7; font-size: 0.8rem; }
+
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소들을 가로 중앙으로 */
+}
+.header-inner {
+    position: relative;
+    width: 100%;
+    /* 아래쪽 .quiz-wrapper나 .container의 max-width와 동일하게 맞추세요 */
+    max-width: 500px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+}
+.home-link {
+    position: absolute;
+    left: 10px; /* 카드 안쪽 여백과 맞추기 위해 살짝 띄움 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 10;
+}
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-inner">
+        <a href="../index.html" class="home-link">🏠</a>
+        <h1>🔢 수학 퀴즈 마스터</h1>
+    </div>
+</div>
+    <div class="container">
+
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="openTab('click-mode', this)">🧐 정답 확인형</button>
+            <button class="tab-btn" onclick="openTab('input-mode', this)">✍️ 직접 입력형</button>
+        </div>
+
+        <div id="click-mode" class="menu-grid active">
+            <a href="basic_plus.html" class="menu-item basic">
+                <span class="title">🐣 왕기초 덧셈</span>
+                <span class="desc">받아올림이 있는 한자리 수 덧셈 연습</span>
+            </a>
+            <a href="easy_20.html" class="menu-item easy">
+                <span class="title">🌱 기초 탄탄 (덧/뺄셈)</span>
+                <span class="desc">십몇 ± 한자리 연산 연습</span>
+            </a>
+            <a href="hard_20.html" class="menu-item hard">
+                <span class="title">🌳 실력 쑥쑥 (덧/뺄셈)</span>
+                <span class="desc">두자리 ± 한자리 연산 연습</span>
+            </a>
+            <a href="easy_mix_10.html" class="menu-item mix-easy">
+                <span class="title">⚡️ 기초 혼합 (10문제)</span>
+                <span class="desc">십몇 ± 한자리 무작위 섞기</span>
+            </a>
+            <a href="hard_mix_10.html" class="menu-item mix-hard">
+                <span class="title">🔥 고난도 혼합 (10문제)</span>
+                <span class="desc">두자리 ± 한자리 무작위 섞기</span>
+            </a>
+        </div>
+
+        <div id="input-mode" class="menu-grid">
+            <a href="basic_plus_self.html" class="menu-item basic self">
+                <span class="title">🐣 왕기초 덧셈 답안 입력형</span>
+                <span class="desc">받아올림이 있는 한자리수 덧셈 정답 쓰기</span>
+            </a>
+            <a href="easy_20_self.html" class="menu-item easy self">
+                <span class="title">🌱 기초 탄탄 답안 입력형</span>
+                <span class="desc">십몇 ± 한자리 정답 쓰기</span>
+            </a>
+            <a href="hard_20_self.html" class="menu-item hard self">
+                <span class="title">🌳 실력 쑥쑥 답안 입력형</span>
+                <span class="desc">두자리 ± 한자리 정답 쓰기</span>
+            </a>
+            <a href="easy_mix_10_self.html" class="menu-item mix-easy self">
+                <span class="title">⚡️ 기초 혼합 답안 입력형</span>
+                <span class="desc">십몇 ± 한자리 무작위 10문제 정답 쓰기</span>
+            </a>
+            <a href="hard_mix_10_self.html" class="menu-item mix-hard self">
+                <span class="title">🔥 고난도 혼합 답안 입력형</span>
+                <span class="desc">두자리 ± 한자리 무작위 10문제 정답 쓰기</span>
+            </a>
+        </div>
+
+        <footer>© 2026 수학 연습장 - 엄마표 학습 앱</footer>
+    </div>
+
+    <script>
+        function openTab(tabId, btn) {
+            // 모든 그리드 숨기기
+            const grids = document.querySelectorAll('.menu-grid');
+            grids.forEach(grid => grid.classList.remove('active'));
+
+            // 모든 탭 버튼 비활성화
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            // 선택한 탭과 버튼 활성화
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>

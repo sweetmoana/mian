@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>기초 혼합 도전!</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body class="mix-easy-page">
+
+    <div class="header">
+        <h1>⚡️ 기초 혼합 도전 (10문제)</h1>
+        <p class="info">기호를 잘 보고 답을 써보세요!<br>마지막에 <b>[정답 확인하기]</b>를 눌러요.</p>
+    </div>
+
+    <div id="scoreBoard" class="score-board">
+        <div class="score-text" id="scoreValue">결과: 0점 / 100점</div>
+        <p id="scoreMsg" style="margin-top: 5px; color: #666;"></p>
+    </div>
+
+    <div class="quiz-wrapper">
+        <div class="card">
+            <ul id="quiz-list"></ul>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn-check" id="checkBtn" onclick="gradeQuiz()">✅ 정답 확인하기</button>
+        <button onclick="resetAndNew()">🔄 새로운 문제 만들기</button>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+
+<script>
+    function getMixedQuizzes(count) {
+        const data = [];
+        while (data.length < count) {
+            const isPlus = Math.random() < 0.5;
+            const n1 = Math.floor(Math.random() * 10) + 10; // 10 ~ 19
+            const n2 = Math.floor(Math.random() * 9) + 1;  // 1 ~ 9
+
+            if (isPlus) {
+                if ((n1 % 10) + n2 >= 10) {
+                    const q = `${n1} + ${n2}`;
+                    if (!data.some(i => i.q === q)) data.push({ q, a: n1 + n2 });
+                }
+            } else {
+                if ((n1 % 10) < n2) {
+                    const q = `${n1} - ${n2}`;
+                    if (!data.some(i => i.q === q)) data.push({ q, a: n1 - n2 });
+                }
+            }
+        }
+        return data;
+    }
+
+    function renderQuizzes() {
+        const quizData = getMixedQuizzes(10);
+        const quizList = document.getElementById('quiz-list');
+
+        quizList.innerHTML = quizData.map((item, idx) => `
+            <li class="quiz-item">
+                <span class="q-text"><span class="q-num">(${idx + 1})</span> ${item.q} =</span> 
+                <input type="number" class="ans-input" data-ans="${item.a}" inputmode="numeric" min="0">
+                <span class="result-mark"></span>
+            </li>
+        `).join('');
+        
+        applyInputControl();
+    }
+
+    function applyInputControl() {
+        const inputs = document.querySelectorAll('.ans-input');
+        inputs.forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                // 마이너스(-), 점(.), 지수(e) 입력 차단
+                if (['-', '.', 'e', 'E'].includes(e.key)) e.preventDefault();
+                
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const allInputs = Array.from(document.querySelectorAll('.ans-input'));
+                    const nextIdx = allInputs.indexOf(input) + 1;
+                    if (allInputs[nextIdx]) allInputs[nextIdx].focus();
+                    else gradeQuiz();
+                }
+            });
+            input.addEventListener('input', function() {
+                if (this.value < 0) this.value = "";
+            });
+        });
+    }
+
+    function gradeQuiz() {
+        const inputs = document.querySelectorAll('.ans-input');
+        const marks = document.querySelectorAll('.result-mark');
+        let score = 0;
+
+        inputs.forEach((input, i) => {
+            const userVal = parseInt(input.value);
+            const correctVal = parseInt(input.dataset.ans);
+            
+            if (userVal === correctVal) {
+                score += 10; // 10문제이므로 문제당 10점
+                marks[i].innerText = "⭕";
+                marks[i].className = "result-mark correct-text";
+                input.classList.remove('wrong-input');
+            } else {
+                marks[i].innerText = "❌";
+                marks[i].className = "result-mark wrong-text";
+                input.classList.add('wrong-input');
+            }
+        });
+
+        const board = document.getElementById('scoreBoard');
+        board.style.display = "block";
+        document.getElementById('scoreValue').innerText = `결과: ${score}점 / 100점`;
+        
+        const msg = document.getElementById('scoreMsg');
+        if (score === 100) msg.innerText = "🎊 완벽해요! 연산 마스터가 되었네요! 🎊";
+        else if (score >= 70) msg.innerText = "👍 잘했어요! 틀린 문제를 다시 확인해봐요.";
+        else msg.innerText = "💪 천천히 다시 풀다 보면 다 맞을 수 있어요!";
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAndNew() {
+        document.getElementById('scoreBoard').style.display = "none";
+        renderQuizzes();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    renderQuizzes();
+</script>
+</body>
+</html>

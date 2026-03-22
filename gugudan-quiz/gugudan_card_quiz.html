@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <title>반짝반짝 구구단 챌린지</title>
+ <link rel="stylesheet" href="style2.css">
+    <style>
+
+    </style>
+</head>
+<body class="gugudan_card_mix">
+
+<div class="container">
+    <h2>🎯 구구단 챌린지 🎯</h2>
+    
+    <div class="dan-menu" id="danMenu"></div>
+
+<div class="card" >
+
+    <div id="question">준비!</div>
+    
+    <div class="hint-dots" id="hintDots"></div>
+<input type="number" id="userAns" placeholder="?" inputmode="numeric">
+
+    <div id="message">단을 선택하면 시작해요!</div>
+</div>
+    <div class="input-group">
+        
+        <button class="main-btn" onclick="checkAnswer()">정답 확인!</button>
+    </div>
+
+    <div>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+</div>
+
+<script>
+    let currentDan = 2;
+    let targetNum = 0;
+    let correctAnswer = 0;
+    let timer = null; // 타이머 변수 추가
+
+    const danBtnsContainer = document.getElementById('danMenu');
+    for (let i = 2; i <= 9; i++) {
+        const btn = document.createElement('button');
+        btn.innerText = i + '단';
+        btn.onclick = (e) => selectDan(i, e.target);
+        if (i === 2) btn.classList.add('active');
+        danBtnsContainer.appendChild(btn);
+    }
+
+    function selectDan(dan, btnElement) {
+        if(timer) clearTimeout(timer); // 혹시 실행 중인 타이머가 있다면 취소
+        currentDan = dan;
+        document.querySelectorAll('.dan-menu button').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        targetNum = Math.floor(Math.random() * 9) + 1;
+        correctAnswer = currentDan * targetNum;
+        
+        document.getElementById('question').innerText = `${currentDan} × ${targetNum}`;
+        document.getElementById('userAns').value = "";
+        document.getElementById('message').innerText = "답을 쓰고 버튼을 눌러요!";
+        document.getElementById('message').style.color = "#333";
+        document.getElementById('userAns').focus();
+        
+        drawHint();
+    }
+
+    function drawHint() {
+        const area = document.getElementById('hintDots');
+        area.innerHTML = "";
+        for(let i=0; i<targetNum; i++) {
+            const group = document.createElement('div');
+            group.className = 'dot-group';
+            for(let j=0; j<currentDan; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                group.appendChild(dot);
+            }
+            area.appendChild(group);
+        }
+    }
+
+    // 3. 정답 체크 함수 (카운트다운 포함)
+    function checkAnswer() {
+        const val = document.getElementById('userAns').value;
+        if (!val) return; // 빈칸이면 무시
+        
+        const userAns = parseInt(val);
+        const msg = document.getElementById('message');
+
+        if (userAns === correctAnswer) {
+            msg.style.color = "#40c057";
+            document.activeElement.blur(); // 키보드 내리기
+
+            msg.innerText = "🎊 정답! 1초 뒤 다음 문제... 🎊";
+            
+            // 기존 타이머가 있다면 제거 (중복 실행 방지)
+            if(timer) clearTimeout(timer);
+            
+            timer = setTimeout(() => {
+                nextQuestion();
+            }, 1000); 
+
+        } else {
+            msg.innerText = "다시 한번 세어볼까? 할 수 있어! 💪";
+            msg.style.color = "#fa5252";
+            // 틀렸을 때는 입력창을 비워주고 다시 포커스 (아이 편의성)
+            document.getElementById('userAns').value = "";
+            document.getElementById('userAns').focus();
+        }
+    }
+
+   // [수정된 부분] 엔터 키 및 입력 제한 로직
+    const inputField = document.getElementById('userAns');
+
+    // 1. 키보드 입력 제어 (엔터 처리 및 음수 방지)
+    inputField.addEventListener('keydown', (e) => {
+        // 엔터 키를 눌렀을 때
+        if (e.key === 'Enter') {
+            e.preventDefault(); // 브라우저 기본 동작 방지
+            checkAnswer();      // 정답 체크 함수 실행
+        }
+        
+        // 음수(-), 소수점(.), 지수(e) 입력 방지
+        if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '.') {
+            e.preventDefault();
+        }
+    });
+
+    // 2. 혹시나 마우스 조작 등으로 음수가 들어올 경우 즉시 차단
+    inputField.addEventListener('input', function() {
+        if (this.value < 0) this.value = "";
+    });
+
+</script>
+</body>
+</html>

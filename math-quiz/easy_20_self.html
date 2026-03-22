@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>기초 탄탄 도전!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="easy-page">
+
+    <div class="header">
+        <h1>🌱 기초 탄탄 도전 (20문제)</h1>
+        <p class="info">빈칸에 답을 쓰고 <b>[정답 확인하기]</b>를 누르세요!</p>
+    </div>
+
+    <div id="scoreBoard" class="score-board">
+        <div class="score-text" id="scoreValue">결과: 0점 / 100점</div>
+        <p id="scoreMsg" style="margin-top: 5px; color: #666;"></p>
+    </div>
+
+    <div class="quiz-wrapper">
+        <div class="card plus">
+            <h3>➕ 덧셈 (받아올림)</h3>
+            <ul id="plus-list"></ul>
+        </div>
+
+        <div class="card minus">
+            <h3>➖ 뺄셈 (받아내림)</h3>
+            <ul id="minus-list"></ul>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn-check" id="checkBtn" onclick="gradeQuiz()">✅ 정답 확인하기</button>
+        <button onclick="resetAndNew()">🔄 새로운 문제 만들기</button>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+
+<script>
+    // 1. 십몇 + 한자리 (받아올림) 로직
+    function getPlusQuizzes(count) {
+        const data = [];
+        while (data.length < count) {
+            const n1 = Math.floor(Math.random() * 10) + 10;
+            const n2 = Math.floor(Math.random() * 9) + 1;
+            if ((n1 % 10) + n2 >= 10) {
+                const q = `${n1} + ${n2}`;
+                if (!data.some(i => i.q === q)) data.push({ q, a: n1 + n2 });
+            }
+        }
+        return data;
+    }
+
+    // 2. 십몇 - 한자리 (받아내림) 로직
+    function getMinusQuizzes(count) {
+        const data = [];
+        while (data.length < count) {
+            const n1 = Math.floor(Math.random() * 10) + 10;
+            const n2 = Math.floor(Math.random() * 9) + 1;
+            if ((n1 % 10) < n2) {
+                const q = `${n1} - ${n2}`;
+                if (!data.some(i => i.q === q)) data.push({ q, a: n1 - n2 });
+            }
+        }
+        return data;
+    }
+
+    function renderQuizzes() {
+        const pList = getPlusQuizzes(10);
+        const mList = getMinusQuizzes(10);
+
+        const renderItem = (item, idx, offset) => `
+            <li class="quiz-item">
+                <span class="q-text"><span class="q-num">(${idx + 1 + offset})</span> ${item.q} =</span> 
+                <input type="number" class="ans-input" data-ans="${item.a}" inputmode="numeric" min="0">
+                <span class="result-mark"></span>
+            </li>
+        `;
+
+        document.getElementById('plus-list').innerHTML = pList.map((item, idx) => renderItem(item, idx, 0)).join('');
+        document.getElementById('minus-list').innerHTML = mList.map((item, idx) => renderItem(item, idx, 10)).join('');
+        
+        applyInputControl();
+    }
+
+    // 마이너스 및 기호 입력 차단 로직
+    function applyInputControl() {
+        const inputs = document.querySelectorAll('.ans-input');
+        inputs.forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (['-', '.', 'e', 'E'].includes(e.key)) e.preventDefault();
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const allInputs = Array.from(document.querySelectorAll('.ans-input'));
+                    const nextIdx = allInputs.indexOf(input) + 1;
+                    if (allInputs[nextIdx]) allInputs[nextIdx].focus();
+                    else gradeQuiz();
+                }
+            });
+            input.addEventListener('input', function() {
+                if (this.value < 0) this.value = "";
+            });
+        });
+    }
+
+    function gradeQuiz() {
+        const inputs = document.querySelectorAll('.ans-input');
+        const marks = document.querySelectorAll('.result-mark');
+        let score = 0;
+
+        inputs.forEach((input, i) => {
+            const userVal = parseInt(input.value);
+            const correctVal = parseInt(input.dataset.ans);
+            
+            if (userVal === correctVal) {
+                score += 5;
+                marks[i].innerText = "⭕";
+                marks[i].className = "result-mark correct-text";
+                input.classList.remove('wrong-input');
+            } else {
+                marks[i].innerText = "❌";
+                marks[i].className = "result-mark wrong-text";
+                input.classList.add('wrong-input');
+            }
+        });
+
+        const board = document.getElementById('scoreBoard');
+        board.style.display = "block";
+        document.getElementById('scoreValue').innerText = `결과: ${score}점 / 100점`;
+        
+        const msg = document.getElementById('scoreMsg');
+        if (score === 100) msg.innerText = "🎊 대단해요! 완벽한 실력이에요! 🎊";
+        else if (score >= 80) msg.innerText = "✨ 아쉽다! 조금만 더 하면 백점이에요!";
+        else msg.innerText = "💪 포기하지 말고 다시 도전해볼까요?";
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAndNew() {
+        document.getElementById('scoreBoard').style.display = "none";
+        renderQuizzes();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    renderQuizzes();
+</script>
+</body>
+</html>

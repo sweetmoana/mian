@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <meta name="theme-color" content="#f08c00">
+    <title>매일매일 수학 퀴즈</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #f8f9fa; 
+            margin: 0; 
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { width: 100%; max-width: 500px; text-align: center; }
+        h1 { color: #2c3e50; font-size: 2rem; margin-bottom: 10px; }
+        p { color: #7f8c8d; margin-bottom: 40px; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 8px solid #ddd;
+        }
+
+        .menu-item:active { transform: scale(0.98); }
+
+        /* 난이도별 색상 구분 */
+	.basic { border-left-color: #fab005;}
+        .easy { border-left-color: #40c057; }
+        .hard { border-left-color: #fa5252; }
+        .mix-easy { border-left-color: #339af0; }
+        .mix-hard { border-left-color: #7950f2; }
+
+        .title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .desc { font-size: 0.9rem; color: #666; }
+
+        footer { margin-top: 50px; color: #bdc3c7; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔢 수학 퀴즈 마스터</h1>
+        <p>오늘 풀고 싶은 난이도를 선택하세요!</p>
+
+        <div class="menu-grid">
+            <a href="basic_plus.html" class="menu-item basic">
+                <span class="title">🐣 왕기초 덧셈 (20문제)</span>
+                <span class="desc">한자리 수 더하기 (합이 10 이상)</span>
+            </a>
+            <a href="easy_20.html" class="menu-item easy">
+                <span class="title">🌱 기초 탄탄 (20문제)</span>
+                <span class="desc">십몇 ± 한자리 (덧셈/뺄셈 구분)</span>
+            </a>
+
+            <a href="hard_20.html" class="menu-item hard">
+                <span class="title">🌳 실력 쑥쑥 (20문제)</span>
+                <span class="desc">두자리 ± 한자리 (덧셈/뺄셈 구분)</span>
+            </a>
+
+            <a href="easy_mix_10.html" class="menu-item mix-easy">
+                <span class="title">⚡️ 기초 혼합 (10문제)</span>
+                <span class="desc">십몇 ± 한자리 (무작위 섞어서)</span>
+            </a>
+
+            <a href="hard_mix_10.html" class="menu-item mix-hard">
+                <span class="title">🔥 고난도 혼합 (10문제)</span>
+                <span class="desc">두자리 ± 한자리 (무작위 섞어서)</span>
+            </a>
+        </div>
+
+        <footer>© 2026 수학 퀴즈 연습장</footer>
+    </div>
+
+</body>
+</html>

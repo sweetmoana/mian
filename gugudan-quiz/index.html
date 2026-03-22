@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <meta name="theme-color" content="#fcc419">
+    <title>구구단 마스터</title>
+    <style>
+        /* 기존 인덱스 스타일과 통일 */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #fff9eb; /* 구구단 전용 따뜻한 배경색 */
+            margin: 0; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { width: 100%; max-width: 500px; text-align: center; }
+        h1 { color: #856404; font-size: 1.8rem; margin-bottom: 20px; }
+        p { color: #b48b00; margin-bottom: 40px; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 8px solid #ddd;
+        }
+
+        .menu-item:active { transform: scale(0.98); }
+
+        /* 구구단 단계별 색상 구분 */
+        .step-explore { border-left-color: #fab005; } /* 탐색: 노랑 */
+        .step-quiz { border-left-color: #ff922b; }    /* 퀴즈: 오렌지 */
+        .step-mix { border-left-color: #fa5252; }     /* 혼합: 빨강 */
+
+        .title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .desc { font-size: 0.9rem; color: #666; }
+
+        footer { margin-top: 50px; color: #bdc3c7; font-size: 0.8rem; }
+
+/*홈버튼*/
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소들을 가로 중앙으로 */
+}
+.header-inner {
+    position: relative;
+    width: 100%;
+    /* 아래쪽 .quiz-wrapper나 .container의 max-width와 동일하게 맞추세요 */
+    max-width: 500px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+}
+.home-link {
+    position: absolute;
+    left: 10px; /* 카드 안쪽 여백과 맞추기 위해 살짝 띄움 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 10;
+}
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-inner">
+        <a href="../index.html" class="home-link">🏠</a>
+        <h1>✨ 구구단 마스터 ✨</h1>
+    </div>
+</div>
+    <div class="container">
+        <div class="menu-grid">
+            <a href="gugudan_explore.html" class="menu-item step-explore">
+                <span class="title">🔍 구구단 원리 찾기 (순서대로)</span>
+                <span class="desc">그림 힌트를 보며 클릭해서 답을 확인해요.</span>
+            </a>
+
+            <a href="gugudan_card_quiz.html" class="menu-item step-quiz">
+                <span class="title">🃏 한 문제씩 퀴즈 카드 (랜덤)</span>
+                <span class="desc">직접 답을 쓰고 엔터나 버튼을 눌러 맞춰보세요!</span>
+            </a>
+
+            <a href="gugudan_list_10.html" class="menu-item step-mix">
+                <span class="title">🔥 구구단 랜덤 10문제</span>
+                <span class="desc">2~9단이 섞여있어요. 회색 칸을 눌러 답을 확인!</span>
+            </a>
+            <a href="gugudan_list_10_self.html" class="menu-item step-mix">
+                <span class="title">🔥 구구단 랜덤 10문제 답안 입력형</span>
+                <span class="desc">2~9단이 섞여있어요. 회색 칸을 눌러 답을 확인!</span>
+            </a>
+        </div>
+
+        <footer>© 2026 구구단 연습장 - 엄마표 학습 앱</footer>
+    </div>
+
+</body>
+</html>

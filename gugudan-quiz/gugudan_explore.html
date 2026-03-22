@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="quizicon.png">
+    <title>구구단 빈칸 채우기</title>
+
+    <link rel="stylesheet" href="style2.css">
+   
+</head>
+<body class="gugudan_explore">
+
+<div class="container">
+
+    <h2>🌟 구구단 익히기 🌟</h2>
+    <div class="dan-menu" id="danMenu"></div>
+
+    <div class="card" onclick="toggleAnswer()">
+        <div class="quiz-row">
+            <span id="qText">2 × 1</span>
+            <span>=</span>
+            <div id="aBox" class="answer-box hidden">?</div>
+        </div>
+        
+        <div class="hint-dots" id="hintDots"></div>
+        <p style="margin-top: 15px; color: #888; font-size: 13px;" id="infoMsg">카드를 누르면 답이 나와요!</p>
+    </div>
+
+    <div class="nav-btns">
+        <button id="prevBtn" onclick="prevStep()">이전</button>
+        <button id="nextBtn" onclick="nextStep()">다음</button>
+        
+    </div>
+    <div>
+        <a href="index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
+    </div>
+</div>
+
+<script>
+    let currentDan = 2;
+    let currentNum = 1;
+    let isRevealed = false;
+
+    // 단 메뉴 생성
+    const menu = document.getElementById('danMenu');
+    for(let i=2; i<=9; i++) {
+        const btn = document.createElement('button');
+        btn.innerText = i + '단';
+        btn.onclick = (e) => selectDan(i, e.target);
+        if(i === 2) btn.classList.add('active');
+        menu.appendChild(btn);
+    }
+
+    function selectDan(dan, target) {
+        currentDan = dan;
+        currentNum = 1;
+        document.querySelectorAll('.dan-menu button').forEach(b => b.classList.remove('active'));
+        target.classList.add('active');
+        updateCard();
+    }
+
+    function toggleAnswer() {
+        isRevealed = true;
+        const aBox = document.getElementById('aBox');
+        aBox.classList.remove('hidden');
+        aBox.innerText = currentDan * currentNum;
+        document.getElementById('infoMsg').style.visibility = 'hidden';
+    }
+
+    function updateCard() {
+        isRevealed = false;
+        document.getElementById('qText').innerText = `${currentDan} × ${currentNum}`;
+        
+        const aBox = document.getElementById('aBox');
+        aBox.classList.add('hidden');
+        aBox.innerText = "?";
+        document.getElementById('infoMsg').style.visibility = 'visible';
+        
+        document.getElementById('prevBtn').disabled = (currentNum === 1);
+        document.getElementById('nextBtn').disabled = (currentNum === 9);
+        
+        drawHint();
+    }
+
+    function drawHint() {
+        const area = document.getElementById('hintDots');
+        area.innerHTML = "";
+        for(let i=0; i<currentNum; i++) {
+            const group = document.createElement('div');
+            group.className = 'dot-group';
+            for(let j=0; j<currentDan; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                group.appendChild(dot);
+            }
+            area.appendChild(group);
+        }
+    }
+
+    function nextStep() { if(currentNum < 9) { currentNum++; updateCard(); } }
+    function prevStep() { if(currentNum > 1) { currentNum--; updateCard(); } }
+
+    updateCard();
+</script>
+</body>
+</html>
