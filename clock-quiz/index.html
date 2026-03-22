@@ -148,6 +148,11 @@ canvas {
     <a href="../index.html" class="btn-home">🏠 메인 화면으로 돌아가기</a>
 </div>
 
+
+<audio id="sound-correct" src="https://t1.daumcdn.net/brain_all/score_up.mp3"></audio>
+<audio id="sound-wrong" src="https://t1.daumcdn.net/brain_all/quiz_fail.mp3"></audio>
+
+
 <script>
     const canvas = document.getElementById('clockCanvas');
     const ctx = canvas.getContext('2d');
@@ -266,9 +271,19 @@ canvas {
         const m = parseInt(document.getElementById('userMin').value) || 0;
         const messageElement = document.getElementById('message');
 
+        // 소리 요소 가져오기
+        const soundCorrect = document.getElementById('sound-correct');
+        const soundWrong = document.getElementById('sound-wrong');
+
         if (h === targetHour && m === targetMin) {
             // 정답일 때
             messageElement.style.color = "#4caf50";
+            // [추가] 정답 소리 재생
+            soundCorrect.currentTime = 0; // 처음부터 재생
+            //soundCorrect.play();
+playBeep(1);
+
+        messageElement.style.color = "#4caf50";
             
             // 2초 카운트다운 시작
             let secondsLeft = 2;
@@ -286,11 +301,53 @@ canvas {
 
         } else {
             // 오답일 때
+
+            // [추가] 오답 소리 재생
+            soundWrong.currentTime = 0;
+            //soundWrong.play();
+playBeep(0);
             messageElement.innerText = "다시 한번 세어볼까? 할 수 있어! 💪";
             messageElement.style.color = "#f44336";
         }
         document.activeElement.blur(); // 현재 활성화된 입력창(키보드) 닫기
     }
+
+function playBeep(isCorrect) {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    if (isCorrect) {
+        // 정답: 뾰로롱~ (도-미-솔 순차적으로 빠르게 재생)
+        const notes = [523.25, 659.25, 783.99]; // 도, 미, 솔
+        notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.1 + 0.2);
+            
+            osc.start(audioCtx.currentTime + i * 0.1);
+            osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+        });
+    } else {
+        // 오답: 띠용~ (음이 위에서 아래로 미끄러짐)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.4);
+        
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+    }
+}
 
     generateQuestion();
     
