@@ -101,6 +101,9 @@
         if (userAns === correctAnswer) {
             msg.style.color = "#40c057";
             //document.activeElement.blur(); // 키보드 내리기
+            
+            // [추가] 정답 소리 재생
+            playBeep(1);
 
             msg.innerText = "🎊 정답! 1초 뒤 다음 문제... 🎊";
             
@@ -112,6 +115,9 @@
             }, 1000); 
 
         } else {
+            // [추가] 오답 소리 재생
+            playBeep(0);
+
             msg.innerText = "다시 한번 세어볼까? 할 수 있어! 💪";
             msg.style.color = "#fa5252";
             // 틀렸을 때는 입력창을 비워주고 다시 포커스 (아이 편의성)
@@ -141,6 +147,45 @@
     inputField.addEventListener('input', function() {
         if (this.value < 0) this.value = "";
     });
+
+//정답,오답 비프음
+function playBeep(isCorrect) {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    if (isCorrect) {
+        // 정답: 뾰로롱~ (도-미-솔 순차적으로 빠르게 재생)
+        const notes = [523.25, 659.25, 783.99]; // 도, 미, 솔
+        notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.1 + 0.2);
+            
+            osc.start(audioCtx.currentTime + i * 0.1);
+            osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+        });
+    } else {
+        // 오답: 또도동~ (솔-솔-솔 순차적으로 빠르게 재생)
+        const notes = [783.99, 783.99, 783.99]; // 솔, 솔, 솔
+        notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.1 + 0.2);
+            
+            osc.start(audioCtx.currentTime + i * 0.1);
+            osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+        });
+    }
+}
 
 </script>
 </body>
